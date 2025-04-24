@@ -18,8 +18,6 @@ app = FastAPI(
     version='0.1.0',
 )
 
-database = []
-
 
 @app.post(
     '/users',
