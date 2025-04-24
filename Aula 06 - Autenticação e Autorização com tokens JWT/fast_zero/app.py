@@ -13,8 +13,8 @@ from fast_zero.utils import get_object_or_404, validate_username_or_email
 
 app = FastAPI(
     debug=True,
-    title='Aula Sobre Banco de Dados',
-    description='Configurando Banco de Dados e Gerenciando Migrações com SQLalchemy e Alembic',
+    title='Aula Sobre Autenticação e Autorização com tokens JWT',
+    description='Implementando hash de senhas, autenticação com tokens JWT e autorização.',
     version='0.1.0',
 )
 
