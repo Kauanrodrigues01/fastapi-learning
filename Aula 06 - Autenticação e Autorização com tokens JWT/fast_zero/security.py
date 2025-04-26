@@ -19,7 +19,7 @@ oauth2_schema = OAuth2PasswordBearer(tokenUrl='token')  # Define onde buscar o t
 # Configurações JWT
 SECRET_KEY = 'your-secret-key'  # Mantenha isso seguro em produção!
 ALGORITHM = 'HS256'
-ACESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 def get_password_hash(password: str):
@@ -35,7 +35,7 @@ def verify_password(plain_password: str, hashed_password: str):
 def create_access_token(data_payload: dict):
     """Gera um token JWT válido com os dados do usuário"""
     to_encode = data_payload.copy()
-    expire = datetime.now(tz=ZoneInfo('UTC')) + timedelta(minutes=ACESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(tz=ZoneInfo('UTC')) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode['exp'] = int(expire.timestamp())
 
     return jwt.encode(
