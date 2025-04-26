@@ -1,19 +1,20 @@
 from http import HTTPStatus
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, responses
+from fastapi import APIRouter, Depends, responses, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from fast_zero.database import get_session
 from fast_zero.models import User
-from fast_zero.schemas import UserPublicSchema, UserSchema
+from fast_zero.schemas import UserPublicSchema, UserSchema, FilterPage
 from fast_zero.security import get_current_user, get_password_hash
 from fast_zero.utils import get_object_or_404, validate_username_or_email
 
 router = APIRouter(prefix='/users', tags=['users'])
 T_Session = Annotated[Session, Depends(get_session)]
 T_CurrentUser = Annotated[User, Depends(get_current_user)]
+T_FilterPage = Annotated[FilterPage, Query()]  # A junção do modelo "FilterPage" com o objeto "Query()" do FastAPI, faz com que os atributos do modelo "FilterPage" virem QueryParams do endpoint
 
 
 @router.post(
@@ -39,9 +40,9 @@ def create_user(user: UserSchema, session: T_Session):
 
 
 @router.get('/', status_code=HTTPStatus.OK, response_model=list[UserPublicSchema])
-def read_users(session: T_Session, skip: int = 0, limit: int = 100):
+def read_users(session: T_Session, filter_page: T_FilterPage):
     """Retorna uma lista de usuários com paginação."""
-    users = session.scalars(select(User).offset(skip).limit(limit)).all()
+    users = session.scalars(select(User).offset(filter_page.skip).limit(filter_page.limit)).all()
     return users
 
 

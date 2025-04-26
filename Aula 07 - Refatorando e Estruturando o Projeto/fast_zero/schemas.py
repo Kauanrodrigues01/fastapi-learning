@@ -31,3 +31,8 @@ class UserListSchema(BaseModel):
 class TokenSchema(BaseModel):
     access_token: str
     token_type: str
+
+
+class FilterPage(BaseModel):
+    skip: int = 0
+    limit: int = 100
