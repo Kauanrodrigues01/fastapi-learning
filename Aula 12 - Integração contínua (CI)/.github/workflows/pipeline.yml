@@ -1,0 +1,40 @@
+name: Pipeline
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      ALGORITHM: ${{ secrets.ALGORITHM }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'   # Cache automático do pip para acelerar builds
+
+      - name: Atualizar pip
+        run: python -m pip install --upgrade pip
+
+      - name: Instalar dependências
+        run: pip install -r ./requirements_dev.txt
+
+      - name: Executar lint
+        run: task lint
+
+      - name: Executar testes
+        run: task test
+      
+      - name: Upload relatório coverage HTML
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: htmlcov/
